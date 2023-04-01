@@ -1,104 +1,79 @@
-
-
 CREATE TABLE User (
-  uniqueID INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
+  user_id INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(100) UNIQUE NOT NULL,
+  password VARCHAR(1024),
+  email VARCHAR(100),
   bio TEXT,
-  profile_picture_url VARCHAR(255),
-  wallpaper_url VARCHAR(255),
-  PRIMARY KEY (uniqueID)
+  profile_picture_url VARCHAR(512),
+  wallpaper_url VARCHAR(512),
+  PRIMARY KEY (user_id)
 );
 
-
-
-CREATE TABLE UserGroup (
-  uniqueID INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE Group (
+  group_id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   description TEXT,
-  PRIMARY KEY (uniqueID)
+  PRIMARY KEY (group_id)
 );
-
 
 CREATE TABLE GroupMember (
   group_id INT NOT NULL,
   user_id INT NOT NULL,
-  FOREIGN KEY (group_id) REFERENCES UserGroup(uniqueID),
-  FOREIGN KEY (user_id) REFERENCES User(uniqueID),
+  timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (group_id) REFERENCES Group(group_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (group_id, user_id)
 );
 
-
 CREATE TABLE Model (
-  UniqueID INT NOT NULL AUTO_INCREMENT,
+  model_id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
-  weights VARCHAR(255) NOT NULL,
-  user_id INT NOT NULL,
-  group_id INT DEFAULT NULL,
+  weights VARCHAR(255),
+  user_id INT,
+  group_id INT,
   learning_rate FLOAT NOT NULL,
-  regularization_rate FLOAT NOT NULL,
   optimizer VARCHAR(255) NOT NULL,
-  PRIMARY KEY (UniqueID),
-  FOREIGN KEY (user_id) REFERENCES User(uniqueID),
-  FOREIGN KEY (group_id) REFERENCES UserGroup(uniqueID)
+  layers JSON,
+  PRIMARY KEY (model_id),
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (group_id) REFERENCES Group(group_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-
-CREATE TABLE Layer (
-  id INT NOT NULL AUTO_INCREMENT,
-  type VARCHAR(255) NOT NULL,
-  num_channels INT NOT NULL,
-  model_id INT NOT NULL,
-  activation_function VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (model_id) REFERENCES Model(UniqueID)
-);
-
-
 
 CREATE TABLE Messages (
-  uniqueID INT NOT NULL AUTO_INCREMENT,
+  message_id INT NOT NULL AUTO_INCREMENT,
   text TEXT NOT NULL,
   timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_id INT NOT NULL,
   group_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES User(uniqueID),
-  FOREIGN KEY (group_id) REFERENCES UserGroup(uniqueID),
-  PRIMARY KEY (uniqueID)
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (group_id) REFERENCES Group(group_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY (message_id)
 );
-
 
 CREATE TABLE Model_likes (
   user_id INT NOT NULL,
   model_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES User(uniqueID),
-  FOREIGN KEY (model_id) REFERENCES Model(uniqueID),
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (model_id) REFERENCES Model(model_id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (user_id, model_id)
 );
 
 
-
 CREATE TABLE Comment (
-  uniqueID INT NOT NULL AUTO_INCREMENT,
+  comment_id INT NOT NULL AUTO_INCREMENT,
   text TEXT NOT NULL,
-  timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_id INT NOT NULL,
   model_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES User(uniqueID),
-  FOREIGN KEY (model_id) REFERENCES Model(uniqueID),
-  PRIMARY KEY (uniqueID)
+  timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (model_id) REFERENCES Model(model_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY (comment_id)
 );
-
 
 CREATE TABLE Comment_likes (
   user_id INT NOT NULL,
   comment_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES User(uniqueID),
-  FOREIGN KEY (comment_id) REFERENCES Comment(uniqueID),
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (comment_id) REFERENCES Comment(comment_id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (user_id, comment_id)
 );
-
-
-
-
-
-
