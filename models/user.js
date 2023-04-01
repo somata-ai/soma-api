@@ -43,7 +43,7 @@ class User {
     connection.query(
       "UPDATE User SET username = ?, password = ?," +
         " email = ?, bio = ?, profile_picture_url = ?," +
-        " wallpaper_url = ? WHERE User.model_id = ?",
+        " wallpaper_url = ? WHERE User.user_id = ?",
       [
         updatedUser.username,
         updatedUser.password,
