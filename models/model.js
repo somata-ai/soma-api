@@ -56,12 +56,13 @@ class Model {
   static update(modelId, updatedModel, callback) {
     connection.query(
       "UPDATE Model SET name = ?, learning_rate = ?," +
-        " optimizer = ?, weights = ? WHERE Model.model_id = ?",
+        " optimizer = ?, weights = ?, layers = ? WHERE Model.model_id = ?",
       [
         updatedModel.name,
         updatedModel.learning_rate,
         updatedModel.optimizer,
         updatedModel.weights,
+        updatedModel.layers,
         modelId,
       ],
       (err, result) => {
