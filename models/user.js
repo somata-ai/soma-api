@@ -39,6 +39,31 @@ class User {
     );
   }
 
+  static update(userId, updatedUser, callback) {
+    connection.query(
+      "UPDATE User SET username = ?, password = ?," +
+        " email = ?, bio = ?, profile_picture_url = ?," +
+        " wallpaper_url = ? WHERE User.model_id = ?",
+      [
+        updatedUser.username,
+        updatedUser.password,
+        updatedUser.email,
+        updatedUser.profile_picture_url,
+        updatedUser.wallpaper_url,
+        updatedUser.bio,
+        userId,
+      ],
+      (err, result) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        console.log("Updated user with id: ", updatedUser.userId);
+        callback(null, { ...updatedUser });
+      }
+    );
+  }
+
   static delete(userId, callback) {
     connection.query(
       "DELETE FROM User WHERE user_id = ?",
