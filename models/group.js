@@ -1,6 +1,8 @@
+const { connection } = require("../config/db.config");
+
 class Group {
   static create(newGroup, callback) {
-    connection.query("INSERT INTO Group Set ?", newGroup, (err, result) => {
+    connection.query("INSERT INTO UserGroup Set ?", newGroup, (err, result) => {
       if (err) {
         callback(err, null);
         return;
@@ -13,7 +15,7 @@ class Group {
 
   static findByName(name, callback) {
     connection.query(
-      "SELECT * FROM Group WHERE Group.name LIKE ?",
+      "SELECT * FROM UserGroup WHERE UserGroup.name LIKE ?",
       ["%" + name + "%"],
       (err, result) => {
         if (err) {
@@ -27,7 +29,7 @@ class Group {
 
   static findById(groupId, callback) {
     connection.query(
-      "SELECT * FROM Group WHERE Group.group_id = ?",
+      "SELECT * FROM UserGroup WHERE UserGroup.group_id = ?",
       [groupId],
       (err, result) => {
         if (err) {
@@ -41,7 +43,7 @@ class Group {
 
   static update(groupId, updatedGroup, callback) {
     connection.query(
-      "UPDATE Group SET name = ?, description = ? WHERE Group.group_id = ?",
+      "UPDATE UserGroup SET name = ?, description = ? WHERE UserGroup.group_id = ?",
       [updatedGroup.name, updatedGroup.description, groupId],
       (err, result) => {
         if (err) {
@@ -49,14 +51,14 @@ class Group {
           return;
         }
         console.log("Updated group with id: ", updatedGroup.groupId);
-        callback(null, { ...updatedGroup });
+        callback(null, { group_id: groupId });
       }
     );
   }
 
   static delete(groupId, callback) {
     connection.query(
-      "DELETE FROM Group WHERE group_id = ?",
+      "DELETE FROM UserGroup WHERE group_id = ?",
       [groupId],
       (err, result) => {
         if (err) {

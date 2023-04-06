@@ -1,3 +1,5 @@
+const { connection } = require("../config/db.config");
+
 class GroupMember {
   static create(newGroupMember, callback) {
     connection.query(

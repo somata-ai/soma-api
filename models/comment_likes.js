@@ -1,3 +1,5 @@
+const { connection } = require("../config/db.config");
+
 class CommentLikes {
   static create(newCommentLike, callback) {
     connection.query(

@@ -1,3 +1,5 @@
+const { connection } = require("../config/db.config");
+
 class Comment {
   static create(newComment, callback) {
     connection.query("INSERT INTO Comment Set ?", newComment, (err, result) => {

@@ -1,3 +1,5 @@
+const { connection } = require("../config/db.config");
+
 class Model {
   static create(newModel, callback) {
     connection.query("INSERT INTO Model Set ?", newModel, (err, result) => {
@@ -71,7 +73,7 @@ class Model {
           return;
         }
         console.log("Updated model with id: ", updatedModel.model_id);
-        callback(null, { ...updatedModel });
+        callback(null, { model_id: modelId });
       }
     );
   }

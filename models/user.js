@@ -1,3 +1,5 @@
+const { connection } = require("../config/db.config");
+
 class User {
   static create(newUser, callback) {
     connection.query("INSERT INTO User Set ?", newUser, (err, result) => {
@@ -58,8 +60,8 @@ class User {
           callback(err, null);
           return;
         }
-        console.log("Updated user with id: ", updatedUser.userId);
-        callback(null, { ...updatedUser });
+        console.log("Updated user with id: ", userId);
+        callback(null, { user_id: userId });
       }
     );
   }
