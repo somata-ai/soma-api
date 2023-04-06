@@ -64,7 +64,7 @@ exports.getById = (req, res, next) => {
 };
 
 exports.updateUser = [
-  body("userId", "User id must be provided")
+  body("user_id", "User id must be provided")
     .trim()
     .isLength({ min: 1 })
     .escape(),
@@ -75,7 +75,7 @@ exports.updateUser = [
       return;
     }
 
-    User.findById(req.body.userId, (err, result) => {
+    User.findById(req.body.user_id, (err, result) => {
       if (err) {
         return next(err);
       }
@@ -89,7 +89,7 @@ exports.updateUser = [
         wallpaper_url: req.body.wallpaper_url || result.wallpaper_url,
       };
 
-      User.update(req.body.userId, updatedUser, (err, result) => {
+      User.update(req.body.user_id, updatedUser, (err, result) => {
         if (err) {
           return next(err);
         }

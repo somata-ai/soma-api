@@ -96,7 +96,7 @@ exports.getUserModels = (req, res, next) => {
 };
 
 exports.updateModel = [
-  body("modelId", "Model id must be provided")
+  body("model_id", "Model id must be provided")
     .trim()
     .isLength({ min: 1 })
     .escape(),
@@ -107,7 +107,7 @@ exports.updateModel = [
       return;
     }
 
-    Model.findById(req.body.modelId, (err, result) => {
+    Model.findById(req.body.model_id, (err, result) => {
       if (err) {
         return next(err);
       }
@@ -122,7 +122,7 @@ exports.updateModel = [
         layers: req.body.layers || result.layers,
       };
 
-      Model.update(req.body.modelId, updatedModel, (err, result) => {
+      Model.update(req.body.model_id, updatedModel, (err, result) => {
         if (err) {
           return next(err);
         }
