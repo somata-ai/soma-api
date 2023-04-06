@@ -18,7 +18,7 @@ exports.createModelLike = [
 
     const model_like = {
       user_id: req.body.user_id,
-      model_id: req.body.group_id,
+      model_id: req.body.model_id,
     };
 
     ModelLike.create(model_like, (err, result) => {
