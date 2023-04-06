@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS Messages (
   PRIMARY KEY (message_id)
 );
 
-CREATE TABLE IF NOT EXISTS Model_likes (
+CREATE TABLE IF NOT EXISTS Model_Likes (
   user_id INT NOT NULL,
   model_id INT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS Comment (
   PRIMARY KEY (comment_id)
 );
 
-CREATE TABLE IF NOT EXISTS Comment_likes (
+CREATE TABLE IF NOT EXISTS Comment_Likes (
   user_id INT NOT NULL,
   comment_id INT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,

@@ -20,7 +20,7 @@ exports.createUser = [
       password: req.body.password || null,
       email: req.body.email || null,
       bio: req.body.bio || null,
-      profile_pic_url: req.body.profile_pic_url || null,
+      profile_picture_url: req.body.profile_picture_url || null,
       wallpaper_url: req.body.wallpaper_url || null,
     };
 
@@ -70,6 +70,8 @@ exports.updateUser = [
     .escape(),
 
   (req, res, next) => {
+    const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       res.json({ errors: errors.array() });
       return;

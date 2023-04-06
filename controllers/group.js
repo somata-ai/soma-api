@@ -60,12 +60,14 @@ exports.getById = (req, res, next) => {
 };
 
 exports.updateGroup = [
-  body("group_id", "User id must be provided")
+  body("group_id", "Group id must be provided")
     .trim()
     .isLength({ min: 1 })
     .escape(),
 
   (req, res, next) => {
+    const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       res.json({ errors: errors.array() });
       return;
@@ -75,7 +77,7 @@ exports.updateGroup = [
       if (err) {
         return next(err);
       }
-
+      result = result[0];
       const updatedGroup = {
         name: req.body.name || result.name,
         description: req.body.description || result.description,

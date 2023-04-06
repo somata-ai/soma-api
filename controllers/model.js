@@ -11,10 +11,7 @@ exports.createModel = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("layers", "Layers must be provided")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
+  body("layers", "Layers must be provided").trim().isLength({ min: 1 }),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -27,8 +24,8 @@ exports.createModel = [
     if (!req.body.user_id && !req.body.group_id) {
       const error = new Error("Please specify user or group");
       error.status = 400;
-      console.log(err);
-      return next(err);
+      console.log(error);
+      return next(error);
     }
 
     const model = {
@@ -102,6 +99,8 @@ exports.updateModel = [
     .escape(),
 
   (req, res, next) => {
+    const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       res.json({ errors: errors.array() });
       return;
@@ -112,16 +111,16 @@ exports.updateModel = [
         return next(err);
       }
 
+      result = result[0];
       const updatedModel = {
         name: req.body.name || result.name,
         weights: req.body.weights || result.weights,
-        user_id: req.body.user_id,
-        group_id: req.body.group_id,
+        user_id: result.user_id,
+        group_id: result.group_id,
         learning_rate: req.body.learning_rate || result.learning_rate,
         optimizer: req.body.optimizer || result.optimizer,
-        layers: req.body.layers || result.layers,
+        layers: req.body.layers || JSON.stringify(result.layers),
       };
-
       Model.update(req.body.model_id, updatedModel, (err, result) => {
         if (err) {
           return next(err);

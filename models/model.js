@@ -72,7 +72,7 @@ class Model {
           callback(err, null);
           return;
         }
-        console.log("Updated model with id: ", updatedModel.model_id);
+        console.log("Updated model with id: ", model_id);
         callback(null, { model_id: modelId });
       }
     );
