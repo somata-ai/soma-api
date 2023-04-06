@@ -1,9 +1,19 @@
-var express = require('express');
-var router = express.Router();
+const auth = require("./auth");
+const commentLikes = require("./comment_likes");
+const comment = require("./comment");
+const groupMember = require("./group_member");
+const group = require("./group");
+const modelLikes = require("./model_likes");
+const model = require("./model");
+const user = require("./user");
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-module.exports = router;
+module.exports = {
+  auth,
+  commentLikes,
+  comment,
+  groupMember,
+  group,
+  modelLikes,
+  model,
+  user,
+};
