@@ -1,7 +1,9 @@
+const passport = require("passport");
 const { body, validationResult } = require("express-validator");
 const Group = require("../models/group");
 
 exports.createGroup = [
+  passport.authenticate("jwt", { session: false }),
   body("name", "Username must be provided")
     .trim()
     .isLength({ min: 1 })
@@ -29,37 +31,44 @@ exports.createGroup = [
   },
 ];
 
-exports.getByName = (req, res, next) => {
-  if (!req.params.name) {
-    const error = new Error("Please specify name");
-    error.status = 400;
-    console.log(err);
-    return next(err);
-  }
-  Group.findByName(req.params.name, (err, result) => {
-    if (err) {
+exports.getByName = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.params.name) {
+      const error = new Error("Please specify name");
+      error.status = 400;
+      console.log(err);
       return next(err);
     }
-    res.json(result);
-  });
-};
+    Group.findByName(req.params.name, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json(result);
+    });
+  },
+];
 
-exports.getById = (req, res, next) => {
-  if (!req.params.groupId) {
-    const error = new Error("Please specify id");
-    error.status = 400;
-    console.log(err);
-    return next(err);
-  }
-  User.findById(req.params.groupId, (err, result) => {
-    if (err) {
+exports.getById = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.params.groupId) {
+      const error = new Error("Please specify id");
+      error.status = 400;
+      console.log(err);
       return next(err);
     }
-    res.json(result);
-  });
-};
+    User.findById(req.params.groupId, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json(result);
+    });
+  },
+];
 
 exports.updateGroup = [
+  passport.authenticate("jwt", { session: false }),
   body("group_id", "Group id must be provided")
     .trim()
     .isLength({ min: 1 })
@@ -93,11 +102,14 @@ exports.updateGroup = [
   },
 ];
 
-exports.deleteGroup = (req, res, next) => {
-  Group.delete(req.params.groupId, (err, result) => {
-    if (err) {
-      return next(err);
-    }
-    res.json({ group_id: result.group_id });
-  });
-};
+exports.deleteGroup = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    Group.delete(req.params.groupId, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json({ group_id: result.group_id });
+    });
+  },
+];

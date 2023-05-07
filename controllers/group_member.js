@@ -1,7 +1,9 @@
+const passport = require("passport");
 const { body, validationResult } = require("express-validator");
 const GroupMember = require("../models/group_member");
 
 exports.createGroupMember = [
+  passport.authenticate("jwt", { session: false }),
   body("group_id", "Group must be provided")
     .trim()
     .isLength({ min: 1 })
@@ -31,6 +33,7 @@ exports.createGroupMember = [
 ];
 
 exports.deleteGroupMember = [
+  passport.authenticate("jwt", { session: false }),
   body("group_id", "Group must be provided")
     .trim()
     .isLength({ min: 1 })

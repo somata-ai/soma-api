@@ -1,7 +1,9 @@
+const passport = require("passport");
 const { body, validationResult } = require("express-validator");
 const ModelLike = require("../models/model_likes");
 
 exports.createModelLike = [
+  passport.authenticate("jwt", { session: false }),
   body("user_id", "User must be provided").trim().isLength({ min: 1 }).escape(),
   body("model_id", "Model must be provided")
     .trim()
@@ -30,22 +32,26 @@ exports.createModelLike = [
   },
 ];
 
-exports.getModelLikes = (req, res, next) => {
-  if (!req.params.modelId) {
-    const error = new Error("Please specify id");
-    error.status = 400;
-    console.log(err);
-    return next(err);
-  }
-  ModelLike.findModelLikes(req.params.modelId, (err, result) => {
-    if (err) {
+exports.getModelLikes = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.params.modelId) {
+      const error = new Error("Please specify id");
+      error.status = 400;
+      console.log(err);
       return next(err);
     }
-    res.json(result);
-  });
-};
+    ModelLike.findModelLikes(req.params.modelId, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json(result);
+    });
+  },
+];
 
 exports.deleteModelLike = [
+  passport.authenticate("jwt", { session: false }),
   body("user_id", "User must be provided").trim().isLength({ min: 1 }).escape(),
   body("model_id", "Model must be provided")
     .trim()

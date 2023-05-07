@@ -28,12 +28,15 @@ CREATE TABLE IF NOT EXISTS GroupMember (
 CREATE TABLE IF NOT EXISTS Model (
   model_id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
+  description TEXT,
+  public BOOLEAN DEFAULT 1,
   weights VARCHAR(255),
   user_id INT,
   group_id INT,
   learning_rate FLOAT NOT NULL,
   optimizer VARCHAR(255) NOT NULL,
   layers JSON NOT NULL,
+  likes INT DEFAULT 0,
   PRIMARY KEY (model_id),
   FOREIGN KEY (user_id) REFERENCES User(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (group_id) REFERENCES UserGroup(group_id) ON UPDATE CASCADE ON DELETE CASCADE

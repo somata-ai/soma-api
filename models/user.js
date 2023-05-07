@@ -15,8 +15,8 @@ class User {
 
   static findByName(name, callback) {
     connection.query(
-      "SELECT * FROM User WHERE User.username LIKE ?",
-      ["%" + name + "%"],
+      "SELECT * FROM User WHERE User.username = ?",
+      [name],
       (err, result) => {
         if (err) {
           callback(err, null);

@@ -1,7 +1,9 @@
+const passport = require("passport");
 const { body, validationResult } = require("express-validator");
 const Model = require("../models/model");
 
 exports.createModel = [
+  passport.authenticate("jwt", { session: false }),
   body("name", "Name must be provided").trim().isLength({ min: 1 }).escape(),
   body("learning_rate", "Learning rate must be provided")
     .trim()
@@ -15,7 +17,7 @@ exports.createModel = [
 
   (req, res, next) => {
     const errors = validationResult(req);
-
+    console.log(req.body);
     if (!errors.isEmpty()) {
       res.json({ errors: errors.array() });
       return;
@@ -38,6 +40,8 @@ exports.createModel = [
       layers: req.body.layers,
     };
 
+    console.log(model);
+
     Model.create(model, (err, result) => {
       if (err) {
         return next(err);
@@ -47,52 +51,62 @@ exports.createModel = [
   },
 ];
 
-exports.getByName = (req, res, next) => {
-  if (!req.params.name) {
-    const error = new Error("Please specify name");
-    error.status = 400;
-    console.log(err);
-    return next(err);
-  }
-  Model.findByName(req.params.name, (err, result) => {
-    if (err) {
+exports.getByName = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.params.name) {
+      const error = new Error("Please specify name");
+      error.status = 400;
+      console.log(err);
       return next(err);
     }
-    res.json(result);
-  });
-};
+    Model.findByName(req.params.name, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json(result);
+    });
+  },
+];
 
-exports.getById = (req, res, next) => {
-  if (!req.params.modelId) {
-    const error = new Error("Please specify id");
-    error.status = 400;
-    console.log(err);
-    return next(err);
-  }
-  Model.findById(req.params.modelId, (err, result) => {
-    if (err) {
+exports.getById = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.params.modelId) {
+      const error = new Error("Please specify id");
+      error.status = 400;
+      console.log(err);
       return next(err);
     }
-    res.json(result);
-  });
-};
+    Model.findById(req.params.modelId, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json(result);
+    });
+  },
+];
 
-exports.getUserModels = (req, res, next) => {
-  if (!req.params.userId) {
-    const error = new Error("Please specify id");
-    error.status = 400;
-    console.log(err);
-    return next(err);
-  }
-  Model.findUserModels(req.params.userId, (err, result) => {
-    if (err) {
+exports.getUserModels = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.params.userId) {
+      const error = new Error("Please specify id");
+      error.status = 400;
+      console.log(err);
       return next(err);
     }
-    res.json(result);
-  });
-};
+    Model.findUserModels(req.params.userId, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json(result);
+    });
+  },
+];
 
 exports.updateModel = [
+  passport.authenticate("jwt", { session: false }),
   body("model_id", "Model id must be provided")
     .trim()
     .isLength({ min: 1 })
@@ -114,6 +128,9 @@ exports.updateModel = [
       result = result[0];
       const updatedModel = {
         name: req.body.name || result.name,
+        description: req.body.description || result.description,
+        likes: req.body.likes || result.likes,
+        public: req.body.public || result.public,
         weights: req.body.weights || result.weights,
         user_id: result.user_id,
         group_id: result.group_id,
@@ -131,11 +148,14 @@ exports.updateModel = [
   },
 ];
 
-exports.deleteModel = (req, res, next) => {
-  Model.delete(req.params.modelId, (err, result) => {
-    if (err) {
-      return next(err);
-    }
-    res.json({ model_id: result.model_id });
-  });
-};
+exports.deleteModel = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    Model.delete(req.params.modelId, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json({ model_id: result.model_id });
+    });
+  },
+];

@@ -15,7 +15,12 @@ class Model {
 
   static findUserModels(userId, callback) {
     connection.query(
-      "SELECT * FROM Model WHERE Model.user_id = ?",
+      "SELECT model_id, name, Model.user_id, " +
+        "learning_rate, optimizer, layers, " +
+        "description, public, likes, JSON_ARRAYAGG(text) as comments " +
+        "FROM Model LEFT JOIN Comment USING (model_id) " +
+        "WHERE Model.user_id = ? " +
+        "GROUP BY model_id",
       [userId],
       (err, result) => {
         if (err) {
@@ -58,13 +63,17 @@ class Model {
   static update(modelId, updatedModel, callback) {
     connection.query(
       "UPDATE Model SET name = ?, learning_rate = ?," +
-        " optimizer = ?, weights = ?, layers = ? WHERE Model.model_id = ?",
+        " optimizer = ?, weights = ?, layers = ?, description = ?," +
+        " likes = ?, public = ? WHERE Model.model_id = ?",
       [
         updatedModel.name,
         updatedModel.learning_rate,
         updatedModel.optimizer,
         updatedModel.weights,
         updatedModel.layers,
+        updatedModel.description,
+        updatedModel.likes,
+        updatedModel.public,
         modelId,
       ],
       (err, result) => {
@@ -72,7 +81,7 @@ class Model {
           callback(err, null);
           return;
         }
-        console.log("Updated model with id: ", model_id);
+        console.log("Updated model with id: ", modelId);
         callback(null, { model_id: modelId });
       }
     );
