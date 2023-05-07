@@ -124,13 +124,17 @@ exports.updateModel = [
       if (err) {
         return next(err);
       }
-
       result = result[0];
       const updatedModel = {
         name: req.body.name || result.name,
         description: req.body.description || result.description,
         likes: req.body.likes || result.likes,
-        public: req.body.public || result.public,
+        public:
+          req.body.public === 0
+            ? req.body.public
+            : req.body.public === 1
+            ? req.body.public
+            : result.public,
         weights: req.body.weights || result.weights,
         user_id: result.user_id,
         group_id: result.group_id,
