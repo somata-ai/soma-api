@@ -50,6 +50,24 @@ exports.getModelLikes = [
   },
 ];
 
+exports.getLikesByUser = [
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    if (!req.params.userId) {
+      const error = new Error("Please specify id");
+      error.status = 400;
+      console.log(err);
+      return next(err);
+    }
+    ModelLike.findLikesByUser(req.params.userId, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+      res.json(result);
+    });
+  },
+];
+
 exports.deleteModelLike = [
   passport.authenticate("jwt", { session: false }),
   body("user_id", "User must be provided").trim().isLength({ min: 1 }).escape(),

@@ -7,6 +7,8 @@ router.post("/create", modelLikesController.createModelLike);
 
 router.delete("/delete", modelLikesController.deleteModelLike);
 
+router.get("/:userId/getUserLikes", modelLikesController.getLikesByUser);
+
 router.get("/:modelId/getById", modelLikesController.getModelLikes);
 
 module.exports = router;

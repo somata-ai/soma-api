@@ -55,7 +55,7 @@ exports.getByName = [
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     if (!req.params.name) {
-      const error = new Error("Please specify name");
+      const error = new Error("Please specify name and user");
       error.status = 400;
       console.log(err);
       return next(err);

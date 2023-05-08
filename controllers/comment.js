@@ -20,13 +20,14 @@ exports.createComment = [
     }
 
     const comment = {
-      text: req.body.name,
-      user_id: req.body.weights,
-      model_id: req.body.user_id,
+      text: req.body.text,
+      user_id: req.body.user_id,
+      model_id: req.body.model_id,
     };
 
     Comment.create(comment, (err, result) => {
       if (err) {
+        console.log(err);
         return next(err);
       }
       res.json({ comment_id: result.comment_id });

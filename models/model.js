@@ -14,14 +14,25 @@ class Model {
   }
 
   static findUserModels(userId, callback) {
+    connection.query("SET sql_mode = ''");
     connection.query(
-      "SELECT model_id, name, Model.user_id, " +
-        "learning_rate, optimizer, layers, " +
-        "description, public, likes, JSON_ARRAYAGG(text) as comments " +
-        "FROM Model LEFT JOIN Comment USING (model_id) " +
+      "SELECT * FROM " +
+        "(SELECT model_id, JSON_ARRAYAGG(Model_Likes.user_id) as likes " +
+        "FROM Model " +
+        "LEFT JOIN Model_Likes USING (model_id) " +
         "WHERE Model.user_id = ? " +
-        "GROUP BY model_id",
-      [userId],
+        "GROUP BY model_id) as t1 " +
+        "INNER JOIN" +
+        "(SELECT model_id, name, weights, Model.user_id, " +
+        "group_id, learning_rate, optimizer, layers, " +
+        "description, public, " +
+        "JSON_ARRAYAGG(text) as comments " +
+        "FROM Model " +
+        "LEFT JOIN Comment USING (model_id) " +
+        "WHERE Model.user_id = ? " +
+        "GROUP BY model_id) as t2 " +
+        "USING (model_id);",
+      [userId, userId],
       (err, result) => {
         if (err) {
           callback(err, null);
@@ -34,7 +45,21 @@ class Model {
 
   static findByName(name, callback) {
     connection.query(
-      "SELECT * FROM Model WHERE Model.name LIKE ?",
+      "SELECT * FROM " +
+        "(SELECT model_id, JSON_ARRAYAGG(Model_Likes.user_id) as likes " +
+        "FROM Model " +
+        "LEFT JOIN Model_Likes USING (model_id) " +
+        "WHERE Model.public = 1 AND Model.name LIKE ?" +
+        "GROUP BY model_id) as t1 " +
+        "INNER JOIN" +
+        "(SELECT model_id, name, weights, Model.user_id, " +
+        "group_id, learning_rate, optimizer, layers, " +
+        "description, public, " +
+        "JSON_ARRAYAGG(text) as comments " +
+        "FROM Model " +
+        "LEFT JOIN Comment USING (model_id) " +
+        "GROUP BY model_id) as t2 " +
+        "USING (model_id);",
       ["%" + name + "%"],
       (err, result) => {
         if (err) {

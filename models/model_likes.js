@@ -31,6 +31,20 @@ class ModelLikes {
     );
   }
 
+  static findLikesByUser(userId, callback) {
+    connection.query(
+      "SELECT * FROM Model_Likes WHERE Model_Likes.user_id = ?",
+      [userId],
+      (err, result) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        callback(null, result);
+      }
+    );
+  }
+
   static delete(modelId, userId, callback) {
     connection.query(
       "DELETE FROM Model_Likes WHERE model_id = ? AND user_id = ?",
