@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS User (
   email VARCHAR(100),
   bio TEXT,
   profile_picture_url VARCHAR(512),
-  wallpaper_url VARCHAR(512),
+  linkedin_url VARCHAR(512),
+  company VARCHAR(100),
+  country VARCHAR(100),
   PRIMARY KEY (user_id)
 );
 

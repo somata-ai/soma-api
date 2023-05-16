@@ -16,7 +16,6 @@ exports.createUserByPassword = [
 
   (req, res, next) => {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       const err = new Error("Invalid input");
       err.status = 400;
@@ -44,10 +43,8 @@ exports.createUserByPassword = [
               password: hashedPassword,
               email: req.body.email || null,
               bio: req.body.bio || null,
-              profile_picture_url: req.body.profile_picture_url || null,
-              wallpaper_url: req.body.wallpaper_url || null,
+              profile_picture_url: req.body.profile_pic_url || null,
             };
-
             User.create(user, (err, result) => {
               if (err) {
                 return next(err);
@@ -160,7 +157,6 @@ exports.updateUser = [
 
   (req, res, next) => {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       res.json({ errors: errors.array() });
       return;
@@ -170,16 +166,15 @@ exports.updateUser = [
       if (err) {
         return next(err);
       }
-
+      result = result[0];
       const updatedUser = {
-        username: req.body.username || result.username,
-        password: req.body.password || result.password,
         email: req.body.email || result.email,
         bio: req.body.bio || result.bio,
-        profile_pic_url: req.body.password || result.profile_pic_url,
-        wallpaper_url: req.body.wallpaper_url || result.wallpaper_url,
+        profile_pic_url: req.body.profile_pic_url || result.profile_pic_url,
+        linkedin_url: req.body.linkedin_url || result.linkedin_url,
+        company: req.body.company || result.company,
+        country: req.body.country || result.country,
       };
-
       User.update(req.body.user_id, updatedUser, (err, result) => {
         if (err) {
           return next(err);

@@ -43,16 +43,17 @@ class User {
 
   static update(userId, updatedUser, callback) {
     connection.query(
-      "UPDATE User SET username = ?, password = ?," +
+      "UPDATE User SET" +
         " email = ?, bio = ?, profile_picture_url = ?," +
-        " wallpaper_url = ? WHERE User.user_id = ?",
+        " linkedin_url = ?, company = ?, country = ?" +
+        " WHERE User.user_id = ?",
       [
-        updatedUser.username,
-        updatedUser.password,
         updatedUser.email,
-        updatedUser.profile_picture_url,
-        updatedUser.wallpaper_url,
         updatedUser.bio,
+        updatedUser.profile_pic_url,
+        updatedUser.linkedin_url,
+        updatedUser.company,
+        updatedUser.country,
         userId,
       ],
       (err, result) => {
